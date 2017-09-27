@@ -14,6 +14,6 @@ int size(struct ProcessQueue *queue);
 struct Process * peek(struct ProcessQueue *queue);
 bool is_full(struct ProcessQueue *queue);
 bool is_empty(struct ProcessQueue *queue);
-struct Process * dequeue(struct ProcessQueue *queue);
+struct Process dequeue(struct ProcessQueue *queue);
 bool enqueue(struct ProcessQueue *queue, struct Process *process);
-void _normalize(struct ProcessQueue *queue);
+struct Process _normalize(struct ProcessQueue *queue);

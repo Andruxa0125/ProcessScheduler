@@ -37,8 +37,8 @@ int size(struct ProcessQueue *queue){
  * Returns the next element in the ProcessQueue.
  */
 struct Process * peek(struct ProcessQueue *queue){
-   if(queue->last != -1){
-      return &queue->process_queue[queue->last];
+   if(queue->size != 0){
+      return &queue->process_queue[0];
    }
    else
       return NULL;
@@ -61,16 +61,15 @@ bool is_empty(struct ProcessQueue *queue){
 /*
  * Dequeues an element from the ProcessQueue and returns that element.
  */
-struct Process * dequeue(struct ProcessQueue *queue){
+struct Process dequeue(struct ProcessQueue *queue){
    if(!is_empty(queue)){
-      struct Process *first = &queue->process_queue[0];
       queue->size -= 1;
       queue->last -= 1;
-      _normalize(queue);
-      return first;
+      return _normalize(queue);
+;
    }
    else
-      return NULL;
+      return NULL_PROCESS;
 }
 
 bool enqueue(struct ProcessQueue *queue, struct Process *process){
@@ -87,11 +86,13 @@ bool enqueue(struct ProcessQueue *queue, struct Process *process){
 /*
  * Helper function used after dequeueing
  */
-void _normalize(struct ProcessQueue *queue){
+struct Process _normalize(struct ProcessQueue *queue){
    int i;
+   struct Process first = queue->process_queue[0];
    for(i = 0; i < queue->last + 1; i++){
       queue->process_queue[i] = queue->process_queue[i+1];
    }
+   return first;
    /* If a queue is filled, then dequeued until it is empty,
     * it will hold copies of random processes. A possible
     * improvement to this would be to fill any unused spaces

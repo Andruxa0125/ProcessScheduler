@@ -18,14 +18,16 @@ int main() {
    generate_processes(processes, processes_length);
    sort_processes(processes, processes_length);
 
+   print_processes(processes, MAX_SIZE);
+
    int i;
    for(i = 0; i < MAX_SIZE; i++){
       enqueue(queue, &processes[i]);
    }
-   struct Process *process;
+
    for(i = 0; i < MAX_SIZE; i++){
-      process = dequeue(queue);
-      print_process(*process);
+      print_process(dequeue(queue));
+      printf("\n");
    }
 
 }
