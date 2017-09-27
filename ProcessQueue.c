@@ -8,7 +8,8 @@ const struct Process NULL_PROCESS = {.id = -1, .arrival_time = -1, .service_time
 
 /*
  * Constructor for ProcessQueues. Must allocate memory because
- * the ProcessQueue struct uses a flexible array of structs.
+ * the ProcessQueue defined within is local and ProcessQueue
+ * contains a flexible array of structs.
  */
 struct ProcessQueue * make_queue(int size){
    struct ProcessQueue *queue = malloc(sizeof(struct ProcessQueue));
