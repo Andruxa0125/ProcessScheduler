@@ -16,6 +16,7 @@ struct ProcessQueue * make_queue(int size){
    queue->max_size = size;
    queue->size = 0;
    queue->last = -1;
+   return queue;
 }
 
 /*

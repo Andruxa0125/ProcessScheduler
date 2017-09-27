@@ -69,19 +69,19 @@ int main(){
       else
          puts("Input an integer between 0 and 7 inclusive.");
    } while(long_input != 0);
-//   int i;
-//   for(i = 0; i < MAX_SIZE; i++){
-//      enqueue(queue, &processes[i]);
-//   }
-//
-//   for(i = 0; i < MAX_SIZE; i++){
-//      if(peek(queue) != NULL){
-//         print_process(*peek(queue));
-//      }
-//      dequeue(queue);
-//   }
-//   destroy_queue(queue);
-//   print_processes(processes, MAX_SIZE);
+   int i;
+   for(i = 0; i < MAX_SIZE; i++){
+      enqueue(queue, &processes[i]);
+   }
+
+   for(i = 0; i < MAX_SIZE; i++){
+      if(peek(queue) != NULL){
+         print_process(*peek(queue));
+      }
+      dequeue(queue);
+   }
+   destroy_queue(queue);
+   print_processes(processes, MAX_SIZE);
 
 }
 
