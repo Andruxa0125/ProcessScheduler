@@ -24,6 +24,7 @@ struct ProcessQueue * make_queue(int size){
  */
 void destroy_queue(struct ProcessQueue *queue){
    free(queue->process_queue);
+   free(queue);
 }
 
 /*
