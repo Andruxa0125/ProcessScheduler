@@ -34,7 +34,8 @@ int size(struct ProcessQueue *queue){
 }
 
 /*
- * Returns the next element in the ProcessQueue.
+ * Returns the next element in the ProcessQueue. Note, the caller must check
+ * the return value for NULL (use '#include <stddef.h>' to define NULL.
  */
 struct Process * peek(struct ProcessQueue *queue){
    if(queue->size != 0){
@@ -59,7 +60,8 @@ bool is_empty(struct ProcessQueue *queue){
 }
 
 /*
- * Dequeues an element from the ProcessQueue and returns that element.
+ * Dequeues an element from the ProcessQueue and returns that element. Note, caller must
+ * check return value for NULL_PROCESS (check if return.id == -1).
  */
 struct Process dequeue(struct ProcessQueue *queue){
    if(!is_empty(queue)){
