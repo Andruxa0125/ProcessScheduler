@@ -3,7 +3,10 @@
 #include "Process.h"
 #include "Sort.h"
 #include "ProcessQueue.h"
-#include "main.h"
+
+void generate_processes(struct Process processes[], int size);
+void print_process(struct Process process);
+void print_processes(struct Process processes[], int size);
 
 const int MAX_SIZE = 10;
 
