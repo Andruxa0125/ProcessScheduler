@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <stddef.h>
 #include "Process.h"
 #include "Sort.h"
 #include "ProcessQueue.h"
@@ -18,16 +19,16 @@ int main() {
    generate_processes(processes, processes_length);
    sort_processes(processes, processes_length);
 
-   print_processes(processes, MAX_SIZE);
-
    int i;
    for(i = 0; i < MAX_SIZE; i++){
       enqueue(queue, &processes[i]);
    }
 
    for(i = 0; i < MAX_SIZE; i++){
-      print_process(dequeue(queue));
-      printf("\n");
+      dequeue(queue);
+      if(peek(queue) != NULL){
+         print_process(*peek(queue));
+      }
    }
 
 }
