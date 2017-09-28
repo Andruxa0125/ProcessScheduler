@@ -40,6 +40,13 @@ int main(){
                print_processes(process_queue->process_queue, MAX_SIZE);
                sort_by_arrival_time(process_queue);
                print_processes(process_queue->process_queue, MAX_SIZE);
+               dequeue(process_queue);
+               sort_by_priority(process_queue);
+               print_processes(process_queue->process_queue, MAX_SIZE);
+               dequeue(process_queue);
+               sort_by_priority(process_queue);
+
+               print_processes(process_queue->process_queue, MAX_SIZE);
                break;
             case 2:
                puts("Simulating First Come First Serve.\n");
