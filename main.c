@@ -101,5 +101,8 @@ void generate_processes(struct Process processes[], int size){
       if(processes[i].priority == 0) {
          processes[i].priority += 1;
       }
+      processes[i].wait_time = -1;
+      processes[i].response_time = -1;
+      processes[i].turnaround_time = -1;
    }
 }

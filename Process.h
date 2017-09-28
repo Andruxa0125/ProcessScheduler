@@ -5,6 +5,9 @@ struct Process{
    int arrival_time;
    int service_time;
    int priority;
+   int wait_time;
+   int response_time;
+   int turnaround_time;
 };
 
 void print_process(struct Process process);
