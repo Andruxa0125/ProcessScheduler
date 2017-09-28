@@ -7,15 +7,11 @@
 #include "ProcessQueue.h"
 #include "SJF.h"
 
-void generate_processes(struct Process processes[], int size);
+struct ProcessQueue * generate_process_queue(int size);
 const int MAX_SIZE = 10;
 
 int main(){
-   struct Process processes[MAX_SIZE];
-   struct ProcessQueue *queue = make_queue(MAX_SIZE);
-   int processes_length = sizeof(processes)/sizeof(processes[0]);
-
-   generate_processes(processes, processes_length);
+   struct ProcessQueue *process_queue = generate_process_queue(MAX_SIZE);
 
    long long_input;
    char str_input[2];
@@ -41,7 +37,9 @@ int main(){
                break;
             case 1:
                puts("Printing processes.\n");
-               print_processes(processes, MAX_SIZE);
+               print_processes(process_queue->process_queue, MAX_SIZE);
+               sort_by_arrival_time(process_queue);
+               print_processes(process_queue->process_queue, MAX_SIZE);
                break;
             case 2:
                puts("Simulating First Come First Serve.\n");
@@ -69,40 +67,30 @@ int main(){
       else
          puts("Input an integer between 0 and 7 inclusive.");
    } while(long_input != 0);
-//   int i;
-//   for(i = 0; i < MAX_SIZE; i++){
-//      enqueue(queue, &processes[i]);
-//   }
-//
-//   for(i = 0; i < MAX_SIZE; i++){
-//      if(peek(queue) != NULL){
-//         print_process(*peek(queue));
-//      }
-//      dequeue(queue);
-//   }
-//   destroy_queue(queue);
-//   print_processes(processes, MAX_SIZE);
-
 }
 
-void generate_processes(struct Process processes[], int size){
+struct ProcessQueue * generate_process_queue(int size){
+   struct ProcessQueue * process_queue = make_queue(size);
+
    int seed = time(NULL);
    srand(seed);
-
    int i;
    for(i = 0; i < size; i++) {
-      processes[i].id = i;
-      processes[i].arrival_time = rand() % 100;
-      processes[i].service_time = rand() % 11;
-      if(processes[i].service_time == 0) {
-         processes[i].service_time += 1;
+      struct Process *process = malloc(sizeof(struct ProcessQueue));
+      process->id = i;
+      process->arrival_time = rand() % 100;
+      process->service_time = rand() % 11;
+      if(process->service_time == 0) {
+         process->service_time += 1;
       }
-      processes[i].priority = rand() % 5;
-      if(processes[i].priority == 0) {
-         processes[i].priority += 1;
+      process->priority = rand() % 5;
+      if(process->priority == 0) {
+         process->priority += 1;
       }
-      processes[i].wait_time = -1;
-      processes[i].response_time = -1;
-      processes[i].turnaround_time = -1;
+      process->wait_time = -1;
+      process->response_time = -1;
+      process->turnaround_time = -1;
+      enqueue(process_queue, process);
    }
+   return process_queue;
 }

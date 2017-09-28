@@ -97,10 +97,38 @@ struct Process _normalize(struct ProcessQueue *queue){
    for(i = 0; i < queue->last + 1; i++){
       queue->process_queue[i] = queue->process_queue[i+1];
    }
+   struct Process *processes = queue->process_queue;
+   int size = sizeof(processes)/sizeof(processes[0]);
+   for(i = queue->last; i < size; i++){
+      processes[i] = NULL_PROCESS;
+   }
    return first;
-   /* If a queue is filled, then dequeued until it is empty,
-    * it will hold copies of random processes. A possible
-    * improvement to this would be to fill any unused spaces
-    * with NULL_PROCESS.
-    */
+}
+
+// TODO: Find out why this isn't sorting the ProcessQueue by arrival time.
+void sort_by_arrival_time(struct ProcessQueue *queue){
+   struct Process *processes = queue->process_queue;
+   int size = sizeof(processes)/sizeof(processes[0]);
+   int index_of_earliest;
+   struct Process swap;
+   int i, j;
+   for(i = 0; i < size; i++) {
+      index_of_earliest = i;
+      for(j = i; j < size; j++) {
+         if(processes[j].arrival_time < processes[index_of_earliest].arrival_time) {
+            index_of_earliest = j;
+         }
+      }
+      swap = processes[i];
+      processes[i] = processes[index_of_earliest];
+      processes[index_of_earliest] = swap;
+   }
+}
+
+void sort_by_service_time(struct ProcessQueue *queue){
+
+}
+
+void sort_by_priority(struct ProcessQueue *queue){
+
 }
