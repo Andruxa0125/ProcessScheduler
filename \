@@ -1,0 +1,51 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdbool.h>
+#include "Process.h"
+#include "ProcessQueue.h"
+#include "SJF.h"
+#include "Constants.h"
+
+void shortest_job_first(struct ProcessQueue *scheduler){
+   sort_by_arrival_time(scheduler);
+   print_queue(scheduler);
+   struct ProcessQueue *queue = make_queue(MAX_SIZE);
+   struct ProcessQueue *result= make_queue(MAX_SIZE);
+   enqueue(queue, dequeue(scheduler));
+
+   struct Process *process;
+   int quanta = 0;
+   while(is_empty(scheduler) != true || is_empty(queue) != true){
+      printf("Quanta: %d\n", quanta);
+      if(is_empty(queue) == true){
+         quanta++;
+         printf("Quanta: %d\n", quanta);
+         while(quanta >= peek(scheduler)->arrival_time){
+            enqueue(queue, dequeue(scheduler));
+         }
+      }
+      else{
+         process = dequeue(queue);
+         puts("JOB");
+         print_process(*process);
+         process->response_time = quanta;
+         quanta += process->service_time;
+         process->service_time = 0;
+         bool can_queue = true;
+         while(is_empty(scheduler) == false && can_queue){
+            if(quanta <= peek(scheduler)->arrival_time){
+               enqueue(queue, dequeue(scheduler));
+               can_queue = is_empty(scheduler);
+            }
+         }
+         
+         enqueue(result, process);
+         puts("result");
+         print_queue(result);
+         puts("sched");
+         print_queue(scheduler);
+         puts("queue");
+         print_queue(queue);
+      }
+   }
+}

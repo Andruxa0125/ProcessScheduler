@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include "Constants.h"
 #include "Process.h"
 #include "ProcessQueue.h"
 
@@ -41,11 +42,13 @@ int size(struct ProcessQueue *queue){
  * the return value for NULL (use '#include <stddef.h>' to define NULL.
  */
 struct Process * peek(struct ProcessQueue *queue){
-   if(queue->size != 0){
-      return &queue->process_queue[0];
+   if(queue != NULL){
+      if(queue->size != 0){
+         return &queue->process_queue[0];
+      }
+      else
+         return NULL;
    }
-   else
-      return NULL;
 }
 
 /*
@@ -59,22 +62,21 @@ bool is_full(struct ProcessQueue *queue){
  * Returns true if the ProcessQueue is empty, false otherwise.
  */
 bool is_empty(struct ProcessQueue *queue){
-   return queue->size == 0;
+   return (queue->size == 0);
 }
 
 /*
  * Dequeues an element from the ProcessQueue and returns that element. Note, caller must
  * check return value for NULL_PROCESS (check if return.id == -1).
  */
-struct Process dequeue(struct ProcessQueue *queue){
-   if(!is_empty(queue)){
+struct Process * dequeue(struct ProcessQueue *queue){
+   if(is_empty(queue) == false){
       queue->size -= 1;
       queue->last -= 1;
       return _normalize(queue);
-;
    }
    else
-      return NULL_PROCESS;
+      return NULL;
 }
 
 bool enqueue(struct ProcessQueue *queue, struct Process *process){
@@ -91,11 +93,17 @@ bool enqueue(struct ProcessQueue *queue, struct Process *process){
 /*
  * Helper function used after dequeueing
  */
-struct Process _normalize(struct ProcessQueue *queue){
+struct Process * _normalize(struct ProcessQueue *queue){
    int i;
-   struct Process first = queue->process_queue[0];
-   for(i = 0; i < queue->last + 1; i++){
-      queue->process_queue[i] = queue->process_queue[i+1];
+   struct Process *first = malloc(sizeof(struct Process));
+   *first = queue->process_queue[0];
+   if(queue->size == 0){
+      queue->process_queue[0] = queue->process_queue[1];
+   }
+   else{
+      for(i = 0; i < queue->last + 1; i++){
+         queue->process_queue[i] = queue->process_queue[i+1];
+      }
    }
    struct Process *processes = queue->process_queue;
    for(i = queue->last + 1; i < queue->max_size; i++){
@@ -104,6 +112,9 @@ struct Process _normalize(struct ProcessQueue *queue){
    return first;
 }
 
+/*
+ * Sorts the given ProcessQueue by Process.arrival_time.
+ */
 void sort_by_arrival_time(struct ProcessQueue *queue){
    struct Process *processes = queue->process_queue;
    int index_of_earliest;
@@ -122,6 +133,9 @@ void sort_by_arrival_time(struct ProcessQueue *queue){
    }
 }
 
+/* 
+ * Sorts the given ProcessQueue by Process.service_time.
+ */
 void sort_by_service_time(struct ProcessQueue *queue){
    struct Process *processes = queue->process_queue;
    int index_of_earliest;
@@ -140,6 +154,11 @@ void sort_by_service_time(struct ProcessQueue *queue){
    }
 }
 
+/*
+ * Sorts the given ProcessQueue by Process.priority. If two
+ * processes are adjacent and have the same priority, they are not
+ * swapped.
+ */
 void sort_by_priority(struct ProcessQueue *queue){
    struct Process *processes = queue->process_queue;
    int index_of_earliest;
@@ -155,5 +174,43 @@ void sort_by_priority(struct ProcessQueue *queue){
       swap = processes[i];
       processes[i] = processes[index_of_earliest];
       processes[index_of_earliest] = swap;
+   }
+}
+
+struct ProcessQueue * generate_process_queue(int size){
+   struct ProcessQueue * process_queue = make_queue(size);
+
+   int seed = time(NULL);
+   srand(seed);
+   int i;
+   for(i = 0; i < size; i++) {
+      struct Process *process = malloc(sizeof(struct ProcessQueue));
+      process->id = i;
+      process->arrival_time = rand() % 100;
+      process->service_time = rand() % 11;
+      if(process->service_time == 0) {
+         process->service_time += 1;
+      }
+      process->priority = rand() % 5;
+      if(process->priority == 0) {
+         process->priority += 1;
+      }
+      process->wait_time = -1;
+      process->response_time = -1;
+      process->turnaround_time = -1;
+      enqueue(process_queue, process);
+   }
+   return process_queue;
+}
+
+void _print_process(struct Process process) {
+   printf("%-2d%14d%14d%10d%11d%15d%17d\n", process.id, process.arrival_time, process.service_time, process.priority, process.wait_time, process.response_time, process.turnaround_time);
+}
+
+void print_queue(struct ProcessQueue * queue) {
+   printf("%-2s%14s%14s%10s%11s%15s%17s\n\n", "ID", "Arrival Time", "Service Time", "Priority", "Wait Time", "Response Time", "Turnaround Time");
+   int i;
+   for(i = 0; i < queue->size; i++) {
+      _print_process(queue->process_queue[i]);
    }
 }
